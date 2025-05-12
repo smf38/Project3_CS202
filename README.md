@@ -64,16 +64,20 @@ These manage a functional `MinHeap` and should always return new `MinHeap` objec
 | `insert(heap: MinHeap, element: Node) -> MinHeap`    | Insert a `Node` and restore heap property via `heapify_up`. Return new `MinHeap`. |
 | `extract_min(heap: MinHeap) -> tuple[MinHeap, Node]` | Remove and return the smallest node along with the new heap.                      |
 
+---
+
 ### 🔄 Huffman Workflow Functions
 
-| Function                                                      | Description                                                                                                                 |                        |                                                                                                                        |
-| ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `count_frequency(s: str) -> dict[str, int]`                   | Count how many times each character appears in the string `s`.                                                              |                        |                                                                                                                        |
-| `create_priority_queue(frequency: dict[str, int]) -> MinHeap` | Build a `MinHeap` from the frequency dictionary by wrapping each character in a `Node`.                                     |                        |                                                                                                                        |
-| `build_tree_from_queue(priority_queue: MinHeap) -> Node`      | Repeatedly extract the two lowest-frequency nodes, combine them into a new node, and reinsert, until one root node remains. |                        |                                                                                                                        |
-| \`generate\_codes(node: Node                                  | None, prefix="", code: dict                                                                                                 | None = None) -> dict\` | Traverse the tree recursively. Append `"0"` for left, `"1"` for right, and collect final binary codes in a dictionary. |
-| `encode(s: str, codes: dict) -> str`                          | Replace each character in `s` with its Huffman code. Return a string of binary digits.                                      |                        |                                                                                                                        |
-| `decode(encoded_string: str, root: Node) -> str`              | Walk the Huffman tree according to the bits in the string. Reset at root when reaching a leaf. Return the decoded message.  |                        |                                                                                                                        |
+| Function Signature                                                                        | Description                                                                                                                    |
+| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `count_frequency(s: str) -> dict[str, int]`                                               | Count how many times each character appears in the input string `s`. Return a frequency dictionary.                            |
+| `create_priority_queue(frequency: dict[str, int]) -> MinHeap`                             | Build a `MinHeap` from the frequency dictionary. Each character-frequency pair becomes a `Node`.                               |
+| `build_tree_from_queue(priority_queue: MinHeap) -> Node`                                  | Repeatedly combine the two lowest-frequency nodes from the heap into a new node, reinserting until a single root node remains. |
+| `generate_codes(node: Node \| None, prefix: str = "", code: dict \| None = None) -> dict` | Recursively traverse the Huffman tree to assign binary codes to each character. Left edges add `"0"`, right edges add `"1"`.   |
+| `encode(s: str, codes: dict) -> str`                                                      | Replace each character in the string `s` with its corresponding Huffman code. Return the encoded binary string.                |
+| `decode(encoded_string: str, root: Node) -> str`                                          | Use the Huffman tree to decode the binary string. Traverse from the root based on each bit, resetting at each leaf.            |
+
+
 
 ### ✅ `huffman_encoding(s: str)` — DO NOT MODIFY
 
