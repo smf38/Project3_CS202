@@ -16,27 +16,25 @@ class MinHeap:
     data: list[Node] = field(default_factory=list)
 
 def heapify_up(heap: MinHeap, index: int) -> MinHeap:
-
+    pass
 
 def insert(heap: MinHeap, element: Node) -> MinHeap:
-
+    pass
 
 def heapify_down(heap: MinHeap, index: int) -> MinHeap:
-
+    pass
 
 
 def extract_min(heap: MinHeap) -> tuple[MinHeap, Node]:
-
+    pass
 
 
         
 def count_frequency(s: str)-> dict[str,int]:
-
     pass
 
 
 def create_priority_queue(frequency: dict[str, int]) -> MinHeap:
-
     pass
 
 
