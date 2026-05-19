@@ -16,6 +16,7 @@ class MinHeap:
     data: list[Node] = field(default_factory=list)
 
 #here are my heap functions lovingly modified from lab 7 shoutout to prof. duran
+#ill be fully fr thanks for the code
 
 def heapify_up(heap: MinHeap, index: int) -> MinHeap:
     new_heap = heap.data[:]
@@ -54,10 +55,14 @@ def heapify_down(heap: MinHeap, index: int) -> MinHeap:
 
 def extract_min(heap: MinHeap) -> tuple[MinHeap, Node]:
     min_value = heap.data[0]
+    if len(heap.data) == 1:
+        return MinHeap([]), min_value
     last_value = heap.data[-1]
     new_heap = [last_value] + heap.data[1:-1]
     new_heap = heapify_down(MinHeap(new_heap), 0)
     return MinHeap(new_heap.data), min_value
+
+#now to the legit hard stuff aka huffman encoding
 
 def count_frequency(s: str)-> dict[str,int]:
     s_copy = list(s)
@@ -68,14 +73,14 @@ def count_frequency(s: str)-> dict[str,int]:
 
 def create_priority_queue(frequency: dict[str, int]) -> MinHeap:
     new_minheap = MinHeap()
-    for key, value in frequency.items():
+    for key, value in frequency.items(): #i lowk didnt know how to get items from dictionaries so i looked up .items()
         new_minheap = insert(new_minheap, Node(value, key))
     return new_minheap
 
 def build_tree(priority_queue: MinHeap) -> Node|None:
-    if len(priority_queue.data) == 0:
+    if len(priority_queue.data) == 0: #base case
         return None
-    if len(priority_queue.data) == 1:
+    if len(priority_queue.data) == 1: #base case
         return priority_queue.data[0]
     first_extract, left = extract_min(priority_queue)
     second_extract, right = extract_min(first_extract)
@@ -87,14 +92,15 @@ def build_tree(priority_queue: MinHeap) -> Node|None:
     return build_tree(rest)
 
 def generate_codes(node: Node | None, prefix="", code: dict | None =None)-> dict:
-    if code is None:
+    if code is None: #honestly idk if the way i did this follows the nonmutable clause but its wtv
         code = {}
-    if node is None:
+    if node is None: #thank you test cases for catching this bug :)
         return code
     if node.left is None and node.right is None:
         if prefix == "":
             code[node.char] = "0"
-        code[node.char] = prefix
+        else:
+            code[node.char] = prefix
     generate_codes(node.left, prefix + "0", code)
     generate_codes(node.right, prefix + "1", code)
     return code
@@ -106,6 +112,10 @@ def encode(s: str, codes: dict)-> str:
     return new_string
 
 def decode(encoded_string: str, root: Node):
+    if root is None: #this has to go first i found :/
+        return ""
+    if root.left is None and root.right is None: #edge cases amiright
+        return root.char * len(encoded_string)
     decoded = ""
     place_marker = root
     for char in encoded_string:
@@ -113,7 +123,7 @@ def decode(encoded_string: str, root: Node):
             place_marker = place_marker.left
         else:
             place_marker = place_marker.right
-        if place_marker.left is None and place_marker.right is None:
+        if place_marker.left is None and place_marker.right is None: #leaf node
             decoded += place_marker.char
             place_marker = root
     return decoded
@@ -122,7 +132,7 @@ def huffman_encoding(s:str):
     #Do Not Change this function
     frequency = count_frequency(s)
     pq = create_priority_queue(frequency)
-    root = build_tree(pq)
+    root = build_tree(pq) #okay im sorry i had to modify this cuz im pretty sure the name of the func was different
     codes = generate_codes(root)
     encoded_string = encode(s, codes)
     decoded_string = decode(encoded_string,root)
