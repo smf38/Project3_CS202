@@ -60,24 +60,63 @@ def extract_min(heap: MinHeap) -> tuple[MinHeap, Node]:
     return MinHeap(new_heap.data), min_value
 
 def count_frequency(s: str)-> dict[str,int]:
-    pass
+    s_copy = list(s)
+    frequency = {}
+    for item in s_copy:
+        frequency[item] = frequency.get(item, 0) + 1
+    return frequency
 
 def create_priority_queue(frequency: dict[str, int]) -> MinHeap:
-    pass
+    new_minheap = MinHeap()
+    for key, value in frequency.items():
+        new_minheap = insert(new_minheap, Node(value, key))
+    return new_minheap
 
-def build_tree(priority_queue: MinHeap) -> Node:
-    pass
+def build_tree(priority_queue: MinHeap) -> Node|None:
+    if len(priority_queue.data) == 0:
+        return None
+    if len(priority_queue.data) == 1:
+        return priority_queue.data[0]
+    first_extract, left = extract_min(priority_queue)
+    second_extract, right = extract_min(first_extract)
+    combined_node = Node(left.freq + right.freq,
+                         min(left.char, right.char),
+                         left,
+                         right)
+    rest = insert(second_extract, combined_node)
+    return build_tree(rest)
 
 def generate_codes(node: Node | None, prefix="", code: dict | None =None)-> dict:
     if code is None:
-        code = {}  
-    pass
+        code = {}
+    if node is None:
+        return code
+    if node.left is None and node.right is None:
+        if prefix == "":
+            code[node.char] = "0"
+        code[node.char] = prefix
+    generate_codes(node.left, prefix + "0", code)
+    generate_codes(node.right, prefix + "1", code)
+    return code
 
 def encode(s: str, codes: dict)-> str:
-    pass
+    new_string = ""
+    for char in s:
+        new_string += codes[char]
+    return new_string
 
 def decode(encoded_string: str, root: Node):
-    pass
+    decoded = ""
+    place_marker = root
+    for char in encoded_string:
+        if char == "0":
+            place_marker = place_marker.left
+        else:
+            place_marker = place_marker.right
+        if place_marker.left is None and place_marker.right is None:
+            decoded += place_marker.char
+            place_marker = root
+    return decoded
 
 def huffman_encoding(s:str):
     #Do Not Change this function
